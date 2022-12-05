@@ -1,13 +1,8 @@
 package fr.insee.rmes.persistence;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.core.Response;
-
+import fr.insee.rmes.persistence.rdfQueries.QueryUtils;
+import fr.insee.rmes.utils.Constants;
+import fr.insee.rmes.utils.exceptions.RmesException;
 import fr.insee.rmes.utils.keycloak.KeycloakServices;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
@@ -23,13 +18,14 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import fr.insee.rmes.persistence.RepositoryUtils;
-import fr.insee.rmes.persistence.rdfQueries.QueryUtils;
-import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.exceptions.RmesException;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class RepositoryUtils {
@@ -52,8 +48,6 @@ public class RepositoryUtils {
 
 	public static Repository initRepository(String sesameServer, String repositoryID) {
 		if (sesameServer==null||sesameServer.equals("")) {return null;}
-
-
 
 		Repository repo = new HTTPRepository(sesameServer, repositoryID);
 		try {
@@ -122,14 +116,19 @@ public class RepositoryUtils {
 	 * @throws RmesException 
 	 */
 	public static String executeQuery(RepositoryConnection conn, String query) throws RmesException {
-		TupleQuery tupleQuery = null;
-		OutputStream stream = new ByteArrayOutputStream();
+		conn.getRepository();
+		TupleQuery  tupleQuery = null;
+		OutputStream  stream = new ByteArrayOutputStream();
+
 		try {
 			tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, query);
 			tupleQuery.evaluate(new SPARQLResultsJSONWriter(stream));
+			//conn.prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate(new SPARQLResultsJSONWriter(stream));
+
 		} catch (RepositoryException e) {
-			logAndThrowError(query, e);		
+			logAndThrowError(query, e);
 		}
+
 		return stream.toString();
 	}
 	

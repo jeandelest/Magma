@@ -25,6 +25,7 @@ public class ConfigOpenApi {
 
     private final String SCHEMEKEYCLOAK = "oAuthScheme";
     private final String SCHEMEKEYCLOAKBEARER= "bearerScheme";
+
     @Bean
     public OpenAPI customOpenAPIKeycloak() {
         // configuration pour récupérer un jeton auprès de Keycloak
@@ -45,7 +46,6 @@ public class ConfigOpenApi {
 //                        .refreshUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/token")))));
         return openapi;
     }
-
 
 
     @Bean

@@ -1,11 +1,5 @@
 package fr.insee.rmes.configuration;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +13,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -35,8 +34,37 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${fr.insee.rmes.magma.cors.allowedOrigin}")
     private Optional<String> allowedOrigin;
 
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    protected String issuerUri;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.audience}")
+    protected String audience;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.sub-replace-by}")
+    protected String subReplaceBy;
+
+    @Value("${spring.security.enabled:true}")
+    protected boolean enabledSecurity;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.roles.resource-name:}")
+    protected String resourceName;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.roles.for-realm:true}")
+    protected boolean roleForRealm;
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
+       // OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(audience);
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer);
+        jwtDecoder.setJwtValidator(withAudience);
+        jwtDecoder.setClaimSetConverter(new ReplaceSubClaimAdapter());
+        return jwtDecoder;
+    }
+
     // Customization to get Keycloak Role and get preffered_username as principal
-        JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter());
         jwtAuthenticationConverter.setPrincipalClaimName("preferred_username");
@@ -74,23 +102,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }));
         // configuration pour Swagger
         http.authorizeRequests(
-                        authz -> authz.antMatchers(HttpMethod.OPTIONS).permitAll()
-                                .antMatchers("/", "/swagger-ui-magma.html","/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                .antMatchers("/operations/series").authenticated()
-                                .antMatchers("/operations/serie/{id}/operations").authenticated()
-                                .antMatchers("/operations/serie/{id}/").authenticated()
-                                .antMatchers("/operations/operation/{id}").authenticated()
-                                .antMatchers("/listesCodes").authenticated()
-                                .antMatchers("/listeCode/{id}").authenticated()
-                                .antMatchers("/structures").authenticated()
-                                .antMatchers("/structure/{id}").authenticated()
-                                .antMatchers("/composants").authenticated()
-                                .antMatchers("/composant/{id}").authenticated()
-                                .antMatchers("/concepts").authenticated()
-                                .antMatchers("/concept/{id}").authenticated()
-                                .antMatchers("/datasets/list").authenticated()
-                                .antMatchers("/datasets/{id}").authenticated()
-                                .anyRequest().authenticated());
+                authz -> authz.antMatchers(HttpMethod.OPTIONS).permitAll()
+                        .antMatchers("/", "/swagger-ui-magma.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .antMatchers("/operations/series").authenticated()
+                        .antMatchers("/operations/serie/{id}/operations").authenticated()
+                        .antMatchers("/operations/serie/{id}/").authenticated()
+                        .antMatchers("/operations/operation/{id}").authenticated()
+                        .antMatchers("/listesCodes").authenticated()
+                        .antMatchers("/listeCode/{id}").authenticated()
+                        .antMatchers("/structures").authenticated()
+                        .antMatchers("/structure/{id}").authenticated()
+                        .antMatchers("/composants").authenticated()
+                        .antMatchers("/composant/{id}").authenticated()
+                        .antMatchers("/concepts").authenticated()
+                        .antMatchers("/concept/{id}").authenticated()
+                        .antMatchers("/datasets/list").authenticated()
+                        .antMatchers("/datasets/{id}").authenticated()
+                        .anyRequest().authenticated());
         // autorisation d'afficher des frames dans l'appli pour afficher la console h2
         // (risque de clickjacking)
         http.headers().frameOptions().sameOrigin();
@@ -107,6 +135,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    class ReplaceSubClaimAdapter implements Converter<Map<String, Object>, Map<String, Object>> {
+
+        private final MappedJwtClaimSetConverter delegate = MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
+
+        @Override
+        public Map<String, Object> convert(Map<String, Object> claims) {
+            Map<String, Object> convertedClaims = this.delegate.convert(claims);
+            String substitueValue = (String) convertedClaims.get(subReplaceBy);
+            convertedClaims.put("sub", substitueValue);
+            return convertedClaims;
+        }
     }
 }
 
