@@ -10,6 +10,7 @@ WHERE {
     ?uri dcterms:created ?dateCreation .
     ?uri dcterms:modified ?dateMiseAjour .
     ?uri insee:isValidated ?isValidated .
+
     BIND( if(?isValidated,"Publié","Provisoire") as ?statutValidation )
     OPTIONAL { ?uri dcterms:valid ?dateFinValidite . } .
     OPTIONAL {

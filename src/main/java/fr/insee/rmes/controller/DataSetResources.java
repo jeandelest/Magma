@@ -15,9 +15,9 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping(value="/",produces = {"application/json"})
@@ -50,7 +50,7 @@ public class DataSetResources {
             responses = {@ApiResponse(content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = "string", implementation = DataSetModelSwagger.class)))})
 
     public ResponseEntity<String> getDataSetByID(@PathVariable("id") String id,
-                                                 @RequestParam(name = "DateMiseAJour", defaultValue = "false") Boolean boolDateMiseAJour
+                                                 @RequestParam(name = "dateMiseAJour", defaultValue = "false") Boolean boolDateMiseAJour
                                                  ) throws RmesException, JsonProcessingException {
 
         // par défaut ce booléen est faux et donc on renvoie tout les infos d'un dataset
