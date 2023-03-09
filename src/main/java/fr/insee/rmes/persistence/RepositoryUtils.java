@@ -3,7 +3,11 @@ package fr.insee.rmes.persistence;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import fr.insee.rmes.utils.keycloak.KeycloakServices;
 import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;

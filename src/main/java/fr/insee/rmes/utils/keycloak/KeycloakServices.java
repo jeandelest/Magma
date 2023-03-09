@@ -50,7 +50,7 @@ public class KeycloakServices {
         log.debug("GET Keycloak access token");
 
         var keycloakClient = new RestTemplate();
-        String keycloakUrl = server + "/protocol/openid-connect/token";
+        String keycloakUrl = server ;
 
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
