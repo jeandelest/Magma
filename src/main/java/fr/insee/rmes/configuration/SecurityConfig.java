@@ -60,7 +60,8 @@ public class SecurityConfig {
                                 .requestMatchers("/composants").hasRole((defaultRolesForUsers))
                                 .requestMatchers("/composant/**").hasRole((defaultRolesForUsers))
                                 .requestMatchers("/datasets/**").hasRole((defaultRolesForUsers))
-
+                                .requestMatchers("/organisations").hasRole(defaultRolesForUsers)
+                                .requestMatchers("/organisation/**").hasRole(defaultRolesForUsers)
                     )
                     .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                     .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(jwtAuthenticationConverter()));
