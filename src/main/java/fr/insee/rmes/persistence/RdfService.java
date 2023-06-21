@@ -3,16 +3,13 @@ package fr.insee.rmes.persistence;
 import java.util.Map;
 
 
-
+import fr.insee.rmes.utils.config.MagmaConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.insee.rmes.model.ValidationStatus;
-import fr.insee.rmes.utils.config.Config;
 import fr.insee.rmes.utils.exceptions.RmesException;
 
 @Service
@@ -23,7 +20,7 @@ public abstract class RdfService {
 	protected RepositoryGestion repoGestion;
 
     @Autowired
-    protected Config config;
+    protected MagmaConfig magmaConfig;
 	
     protected static String buildRequest(String path, String fileName, Map<String, Object> params) throws RmesException {
         return FreeMarkerUtils.buildRequest(path, fileName, params);
@@ -35,8 +32,8 @@ public abstract class RdfService {
         JSONObject lg1 = new JSONObject();
         JSONObject lg2 = new JSONObject();
 
-        lg1.put("langue", Config.LG1);
-        lg2.put("langue", Config.LG2);
+        lg1.put("langue", MagmaConfig.getLG1());
+        lg2.put("langue", MagmaConfig.getLG2());
         lg1.put("contenu", obj.getString("prefLabelLg1"));
         lg2.put("contenu", obj.getString("prefLabelLg2"));
 
@@ -52,8 +49,8 @@ public abstract class RdfService {
         JSONObject lg1 = new JSONObject();
         JSONObject lg2 = new JSONObject();
 
-        lg1.put("langue", Config.LG1);
-        lg2.put("langue", Config.LG2);
+        lg1.put("langue", MagmaConfig.getLG1());
+        lg2.put("langue", MagmaConfig.getLG2());
         lg1.put("contenu", obj.getString("altLabelLg1"));
         lg2.put("contenu", obj.getString("altLabelLg2"));
 

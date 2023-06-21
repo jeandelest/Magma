@@ -7,7 +7,7 @@ import fr.insee.rmes.model.datasets.*;
 import fr.insee.rmes.modelSwagger.dataset.*;
 import fr.insee.rmes.persistence.RdfService;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,8 +70,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
         //parametrage de la requête
         Map<String, Object> params = initParams();
         params.put("ID", id);
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
 
         //requête intiale
         JSONObject dataSetId = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getDataSetById.ftlh", params));
@@ -109,8 +109,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
         //parametrage de la requête
         Map<String, Object> params = initParams();
         params.put("ID", id);
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
 
         //requête intiale
         JSONObject dataSetId = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getDataSetByIdDateMAJ.ftlh", params));
@@ -135,8 +135,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
         //parametrage de la requête
         Map<String, Object> params = initParams();
         params.put("ID", id);
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
 
         //requête intiale
 
@@ -148,8 +148,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
             JSONObject distributionsTemp = distributionsId.getJSONObject(i);
 
             if ((distributionsTemp.has("descriptionLg2")) & (distributionsTemp.has("descriptionLg1"))) {
-                Title descriptionLg1 = new Title(Config.LG1, (String) distributionsTemp.get("descriptionLg1"));
-                Title descriptionLg2 = new Title(Config.LG2, (String) distributionsTemp.get("descriptionLg2"));
+                Title descriptionLg1 = new Title(MagmaConfig.getLG1(), (String) distributionsTemp.get("descriptionLg1"));
+                Title descriptionLg2 = new Title(MagmaConfig.getLG2(), (String) distributionsTemp.get("descriptionLg2"));
                 List<Title> description = new ArrayList<>();
                 description.add(descriptionLg1);
                 description.add(descriptionLg2);
@@ -160,8 +160,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
             }
 
             if ((distributionsTemp.has("titleLg1")) & (distributionsTemp.has("titleLg2"))) {
-                Title titleLg1 = new Title(Config.LG1, (String) distributionsTemp.get("titleLg1"));
-                Title titleLg2 = new Title(Config.LG2, (String) distributionsTemp.get("titleLg2"));
+                Title titleLg1 = new Title(MagmaConfig.getLG1(), (String) distributionsTemp.get("titleLg1"));
+                Title titleLg2 = new Title(MagmaConfig.getLG2(), (String) distributionsTemp.get("titleLg2"));
                 List<Title> title = new ArrayList<>();
                 title.add(titleLg1);
                 title.add(titleLg2);
@@ -190,14 +190,14 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
 
             Map<String, Object> params4 = initParams();
             params4.put("URI", s.replace(" ", ""));
-            params4.put("LG1", Config.LG1);
-            params4.put("LG2", Config.LG2);
+            params4.put("LG1", MagmaConfig.getLG1());
+            params4.put("LG2", MagmaConfig.getLG2());
 
             JSONObject dataSetId3 = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getDataSetByIdOperation.ftlh", params4));
             ObjectMapper jsonResponse4 = new ObjectMapper();
             Operation operation = jsonResponse4.readValue(dataSetId3.toString(), Operation.class);
-            LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, operation.getlabelOperationLg1());
-            LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, operation.getlabelOperationLg2());
+            LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), operation.getlabelOperationLg1());
+            LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), operation.getlabelOperationLg2());
             List<LabelDataSet> labelDataSets = new ArrayList<>();
             labelDataSets.add(labelDataSet1);
             labelDataSets.add(labelDataSet2);
@@ -216,14 +216,14 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
 
             Map<String, Object> params3 = initParams();
             params3.put("URI", value.replace(" ", ""));
-            params3.put("LG1", Config.LG1);
-            params3.put("LG2", Config.LG2);
+            params3.put("LG1", MagmaConfig.getLG1());
+            params3.put("LG2", MagmaConfig.getLG2());
 
             JSONObject dataSetId3 = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getDataSetByIdSerie.ftlh", params3));
             ObjectMapper jsonResponse3 = new ObjectMapper();
             Serie serie = jsonResponse3.readValue(dataSetId3.toString(), Serie.class);
-            LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, serie.getLabelSerieLg1());
-            LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, serie.getLabelSerieLg2());
+            LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), serie.getLabelSerieLg1());
+            LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), serie.getLabelSerieLg2());
             List<LabelDataSet> labelDataSets = new ArrayList<>();
             labelDataSets.add(labelDataSet1);
             labelDataSets.add(labelDataSet2);
@@ -246,14 +246,14 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
 
                 Map<String, Object> params2 = initParams();
                 params2.put("URI", parts[i].replace(" ", ""));
-                params2.put("LG1", Config.LG1);
-                params2.put("LG2", Config.LG2);
+                params2.put("LG1", MagmaConfig.getLG1());
+                params2.put("LG2", MagmaConfig.getLG2());
 
                 JSONObject dataSetId2 = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getDataSetByIdTheme.ftlh", params2));
                 ObjectMapper jsonResponse2 = new ObjectMapper();
                 Theme theme1 = jsonResponse2.readValue(dataSetId2.toString(), Theme.class);
-                LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, theme1.getLabelThemeLg1());
-                LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, theme1.getLabelThemeLg2());
+                LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), theme1.getLabelThemeLg1());
+                LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), theme1.getLabelThemeLg2());
                 List<LabelDataSet> labelDataSets = new ArrayList<>();
                 labelDataSets.add(labelDataSet1);
                 labelDataSets.add(labelDataSet2);
@@ -268,8 +268,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
 
     @NotNull
     private List<Title> getTitreList(DataSet byDataSet) {
-        Title titre1 = new Title(Config.LG1, byDataSet.getTitreLg1());
-        Title titre2 = new Title(Config.LG2, byDataSet.getTitreLg2());
+        Title titre1 = new Title(MagmaConfig.getLG1(), byDataSet.getTitreLg1());
+        Title titre2 = new Title(MagmaConfig.getLG2(), byDataSet.getTitreLg2());
         List<Title> titres = new ArrayList<>();
         if (byDataSet.getTitreLg1()!=null) {
             titres.add(titre1);
@@ -279,7 +279,7 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
 
     public Map<String, Object> initParams () {
             Map<String, Object> params = new HashMap<>();
-            params.put("DATASETS_GRAPH", Config.BASE_GRAPH + Config.DATASETS_GRAPH);
+            params.put("DATASETS_GRAPH", MagmaConfig.getBaseGraph() + MagmaConfig.getDatasetsGraph());
             return params;
         }
 

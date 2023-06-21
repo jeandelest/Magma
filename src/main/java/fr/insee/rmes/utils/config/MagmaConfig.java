@@ -5,7 +5,6 @@ import java.lang.reflect.Modifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -14,29 +13,27 @@ import org.springframework.stereotype.Component;
 @Component
 
 @PropertySource("classpath:rmeswsgi-magma.properties")
-public class Config {
+public class MagmaConfig {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MagmaConfig.class);
 
-	@Autowired
-	private Environment env;
 
-	public static String CONCEPTS_BASE_URI;
-	public static String STRUCTURES_BASE_URI;
-	public static String CODELISTS_BASE_URI;
-	public static String DATASETS_BASE_URI;
-	public static String BASE_URI_GESTION;
-	public static String LG1;
-	public static String LG2;
-	public static String BASE_GRAPH;
-	public static String DATASETS_GRAPH;
-	public static String CODELIST_GRAPH;
-	public static String CONCEPTS_GRAPH;
-	public static String STRUCTURES_COMPONENTS_GRAPH;
-	public static String STRUCTURES_GRAPH;
-	public static String STRUCTURES_COMPONENTS_BASE_URI;
-	public static String OPERATIONS_SERIES_GRAPH;
-	public static String OPERATIONS_BASE_URI;
+	private static String CONCEPTS_BASE_URI;
+	private static String STRUCTURES_BASE_URI;
+	private static String CODELISTS_BASE_URI;
+	private static String DATASETS_BASE_URI;
+	private static String BASE_URI_GESTION;
+	private static String LG1;
+	private static String LG2;
+	private static String BASE_GRAPH;
+	private static String DATASETS_GRAPH;
+	private static String CODELIST_GRAPH;
+	private static String CONCEPTS_GRAPH;
+	private static String STRUCTURES_COMPONENTS_GRAPH;
+	private static String STRUCTURES_GRAPH;
+	private static String STRUCTURES_COMPONENTS_BASE_URI;
+	private static String OPERATIONS_SERIES_GRAPH;
+	private static String OPERATIONS_BASE_URI;
 
 	@Value("${fr.insee.rmes.magma.force.ssl}")
 	private boolean requiresSsl = false;
@@ -69,7 +66,7 @@ public class Config {
 		return requiresSsl;
 	}
 
-	public void init() {
+	public static void init(Environment env) {
 		CONCEPTS_BASE_URI = env.getProperty("fr.insee.rmes.magma.concepts.baseURI");
 		STRUCTURES_BASE_URI = env.getProperty("fr.insee.rmes.magma.structures.baseURI");
 		CODELISTS_BASE_URI = env.getProperty("fr.insee.rmes.magma.codeLists.baseURI");
@@ -86,35 +83,11 @@ public class Config {
 		STRUCTURES_COMPONENTS_BASE_URI= env.getProperty("fr.insee.rmes.magma.structures.components.baseURI");
 		OPERATIONS_SERIES_GRAPH = env.getProperty("fr.insee.rmes.magma.operations.graph");
 		OPERATIONS_BASE_URI = env.getProperty("fr.insee.rmes.magma.operations.baseURI");
-
-
-		listStaticFieldsValue();
 	}
 
-	private void listStaticFieldsValue() {
-
-		LOG.info("=========== Config class static fields ==============");
-		
-		Field[] declaredFields = Config.class.getDeclaredFields();
-
-		for (Field currentField : declaredFields) {
-			if (Modifier.isStatic(currentField.getModifiers())) {
-				try {
-					LOG.info("{} {}",currentField.getName(), currentField.get(null) );
-				} catch (IllegalArgumentException | IllegalAccessException iac) {
-					LOG.error("Error retrieving Config Values");
-				}
-
-			}
-
-		}
-		
-		LOG.info("======================================================");
 
 
-	}
-
-	public String getConceptsBaseUri() {
+	public static String getConceptsBaseUri() {
 		return CONCEPTS_BASE_URI;
 	}
 
@@ -130,39 +103,39 @@ public class Config {
 		return DATASETS_BASE_URI;
 	}
 
-	public String getBaseUriGestion() {
+	public static String getBaseUriGestion() {
 		return BASE_URI_GESTION;
 	}
 
-	public String getLG1() {
+	public static String getLG1() {
 		return LG1;
 	}
 
-	public String getLG2() {
+	public static String getLG2() {
 		return LG2;
 	}
 
-	public String getBaseGraph() {
+	public static String getBaseGraph() {
 		return BASE_GRAPH;
 	}
 
-	public String getDatasetsGraph() {
+	public static String getDatasetsGraph() {
 		return DATASETS_GRAPH;
 	}
 
-	public String getCodelistGraph() {
+	public static String getCodelistGraph() {
 		return CODELIST_GRAPH;
 	}
 
-	public String getConceptsGraph() {
+	public static String getConceptsGraph() {
 		return CONCEPTS_GRAPH;
 	}
 
-	public String getStructuresComponentsGraph() {
+	public static String getStructuresComponentsGraph() {
 		return STRUCTURES_COMPONENTS_GRAPH;
 	}
 
-	public String getStructuresGraph() {
+	public static String getStructuresGraph() {
 		return STRUCTURES_GRAPH;
 	}
 

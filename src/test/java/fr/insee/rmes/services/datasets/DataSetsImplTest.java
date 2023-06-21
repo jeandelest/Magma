@@ -9,12 +9,11 @@ import fr.insee.rmes.model.datasets.Serie;
 import fr.insee.rmes.model.datasets.Theme;
 import fr.insee.rmes.modelSwagger.dataset.*;
 import fr.insee.rmes.stubs.DataSetsImplStub;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ class DataSetsImplTest {
         List<DataSetModelSwagger> dataSetListDTOS = new ArrayList<>();
 
         for (DataSet byDataSet : dataSets) {
-            Title titre1 = new Title(Config.LG1, byDataSet.getTitreLg1());
-            Title titre2 = new Title(Config.LG2, byDataSet.getTitreLg2());
+            Title titre1 = new Title(MagmaConfig.getLG1(), byDataSet.getTitreLg1());
+            Title titre2 = new Title(MagmaConfig.getLG2(), byDataSet.getTitreLg2());
             List<Title> titres = new ArrayList<>();
             titres.add(titre1);
             titres.add(titre2);
@@ -75,8 +74,8 @@ class DataSetsImplTest {
         } else {
             for (int i = 0; i < Arrays.stream(parts).count(); i++) {
                 Theme theme1 = new Theme("uriTheme", "labelThemeFR", "labelThemeEn");
-                LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, theme1.getLabelThemeLg1());
-                LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, theme1.getLabelThemeLg2());
+                LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), theme1.getLabelThemeLg1());
+                LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), theme1.getLabelThemeLg2());
                 List<LabelDataSet> labelDataSets = new ArrayList<>();
                 labelDataSets.add(labelDataSet1);
                 labelDataSets.add(labelDataSet2);
@@ -95,8 +94,8 @@ class DataSetsImplTest {
         List<SerieModelSwagger> serieListSwaggerS = new ArrayList<>();
         for (String value : serieUri) {
             Serie serie1 = new Serie("uriSerie", "idSerie", "labelSerieFr", "labelSerieEn");
-            LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, serie1.getLabelSerieLg1());
-            LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, serie1.getLabelSerieLg2());
+            LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), serie1.getLabelSerieLg1());
+            LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), serie1.getLabelSerieLg2());
             List<LabelDataSet> labelDataSets = new ArrayList<>();
             labelDataSets.add(labelDataSet1);
             labelDataSets.add(labelDataSet2);
@@ -111,8 +110,8 @@ class DataSetsImplTest {
         List<OperationModelSwagger> operationListSwaggerS = new ArrayList<>();
         for (String s : operationUri) {
             Operation operation1 = new Operation("uriOp1", "idOp1", "labelOp1", "labelOp1");
-            LabelDataSet labelDataSet1 = new LabelDataSet(Config.LG1, operation1.getlabelOperationLg1());
-            LabelDataSet labelDataSet2 = new LabelDataSet(Config.LG2, operation1.getlabelOperationLg2());
+            LabelDataSet labelDataSet1 = new LabelDataSet(MagmaConfig.getLG1(), operation1.getlabelOperationLg1());
+            LabelDataSet labelDataSet2 = new LabelDataSet(MagmaConfig.getLG2(), operation1.getlabelOperationLg2());
             List<LabelDataSet> labelDataSets = new ArrayList<>();
             labelDataSets.add(labelDataSet1);
             labelDataSets.add(labelDataSet2);

@@ -2,7 +2,7 @@ package fr.insee.rmes.persistence;
 
 import fr.insee.rmes.persistence.ontologies.*;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.SKOS;
@@ -14,19 +14,19 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 public enum ObjectType {
-    CONCEPT(Constants.CONCEPT, SKOS.CONCEPT, Config::getConceptsBaseUri),
-    COLLECTION(Constants.COLLECTION, SKOS.COLLECTION, Config::getCollectionsBaseUri),
-    FAMILY(Constants.FAMILY, INSEE.FAMILY, Config::getOpFamiliesBaseUri),
-    SERIES("series", INSEE.SERIES, Config::getOpSeriesBaseUri),
-    OPERATION("operation", INSEE.OPERATION, Config::getOperationsBaseUri),
-    INDICATOR("indicator", INSEE.INDICATOR, Config::getProductsBaseUri),
-    DOCUMENTATION("documentation", SDMX_MM.METADATA_REPORT, Config::getDocumentationsBaseUri),
-    DOCUMENT(Constants.DOCUMENT, FOAF.DOCUMENT, Config::getDocumentsBaseUri),
-    LINK("link", FOAF.DOCUMENT, Config::getLinksBaseUri),
-    GEO_STAT_TERRITORY("geoFeature", GEO.FEATURE, Config::getDocumentationsGeoBaseUri),
+    CONCEPT(Constants.CONCEPT, SKOS.CONCEPT, c->c.getConceptsBaseUri()),
+    COLLECTION(Constants.COLLECTION, SKOS.COLLECTION, MagmaConfig::getCollectionsBaseUri),
+    FAMILY(Constants.FAMILY, INSEE.FAMILY, MagmaConfig::getOpFamiliesBaseUri),
+    SERIES("series", INSEE.SERIES, MagmaConfig::getOpSeriesBaseUri),
+    OPERATION("operation", INSEE.OPERATION, MagmaConfig::getOperationsBaseUri),
+    INDICATOR("indicator", INSEE.INDICATOR, MagmaConfig::getProductsBaseUri),
+    DOCUMENTATION("documentation", SDMX_MM.METADATA_REPORT, MagmaConfig::getDocumentationsBaseUri),
+    DOCUMENT(Constants.DOCUMENT, FOAF.DOCUMENT, MagmaConfig::getDocumentsBaseUri),
+    LINK("link", FOAF.DOCUMENT, MagmaConfig::getLinksBaseUri),
+    GEO_STAT_TERRITORY("geoFeature", GEO.FEATURE, MagmaConfig::getDocumentationsGeoBaseUri),
     ORGANIZATION("organization", ORG.ORGANIZATION, c->""),
-    STRUCTURE("structure", QB.DATA_STRUCTURE_DEFINITION, Config::getStructuresBaseUri),
-    CODE_LIST(Constants.CODELIST, QB.CODE_LIST, Config::getCodelistsBaseUri),
+    STRUCTURE("structure", QB.DATA_STRUCTURE_DEFINITION, MagmaConfig::getStructuresBaseUri),
+    CODE_LIST(Constants.CODELIST, QB.CODE_LIST, MagmaConfig::getCodelistsBaseUri),
     MEASURE_PROPERTY("measureProperty",QB.MEASURE_PROPERTY, c-> c.getStructuresComponentsBaseUri()  + "mesure"),
     ATTRIBUTE_PROPERTY("attributeProperty", QB.ATTRIBUTE_PROPERTY, c->c.getStructuresComponentsBaseUri() + "attribut"),
     DIMENSION_PROPERTY("dimensionProperty", QB.DIMENSION_PROPERTY, c->c.getStructuresComponentsBaseUri() + "dimension"),
@@ -34,30 +34,30 @@ public enum ObjectType {
 
     private final String labelType;
     private final IRI uri;
-    private final Function<Config, String> getBaseUriFromConfig;
+    private final Function<MagmaConfig, String> getBaseUriFromConfig;
 
-    ObjectType(String labelType, IRI uri, Function<Config, String> getBaseUriFromConfig){
+    ObjectType(String labelType, IRI uri, Function<MagmaConfig, String> getBaseUriFromConfig){
         this.labelType =labelType;
         this.uri=uri;
         this.getBaseUriFromConfig = getBaseUriFromConfig;
     }
 
-    private Config config;
+    private MagmaConfig magmaConfig;
 
-    private void setConfig(Config configParam) {
-        config = configParam;
+    private void setConfig(MagmaConfig magmaConfigParam) {
+        magmaConfig = magmaConfigParam;
     }
 
 
     @Component
     public static class ConfigServiceInjector {
         @Autowired
-        private Config config;
+        private MagmaConfig magmaConfig;
 
         @PostConstruct
         public void postConstruct() {
             Arrays.stream(ObjectType.values())
-                    .forEach(o->o.setConfig(config));
+                    .forEach(o->o.setConfig(magmaConfig));
         }
     }
 
@@ -70,12 +70,12 @@ public enum ObjectType {
     }
 
     public  String getBaseUri(){
-        return this.getBaseUriFromConfig.apply(this.config);
+        return this.getBaseUriFromConfig.apply(this.magmaConfig);
     }
 
 
     public String getBaseUriGestion() {
-        return config.getBaseUriGestion() + this.getBaseUri() ;
+        return magmaConfig.getBaseUriGestion() + this.getBaseUri() ;
     }
 
 }

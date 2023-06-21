@@ -8,14 +8,12 @@ import fr.insee.rmes.persistence.RdfService;
 import fr.insee.rmes.persistence.ontologies.IGEO;
 import fr.insee.rmes.persistence.ontologies.QB;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
 
-import javax.xml.soap.SAAJResult;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +55,7 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 	@Override
 	public String getAllStructures() throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_GRAPH, Config.BASE_GRAPH+Config.STRUCTURES_GRAPH);
+		params.put(STRUCTURES_GRAPH, MagmaConfig.getBaseGraph() + MagmaConfig.getStructuresGraph());
 		JSONArray structures =  repoGestion.getResponseAsArray(buildRequest(Constants.STRUCTURES_QUERIES_PATH,"getAllStructures.ftlh", params));
 		for (int i = 0; i < structures.length(); i++) {
 			JSONObject structure = structures.getJSONObject(i);
@@ -71,10 +69,10 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 	@Override
 	public String getStructure(String id) throws RmesException, JsonProcessingException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_GRAPH, config.getBaseGraph() + config.getStructuresGraph());
+		params.put(STRUCTURES_GRAPH, magmaConfig.getBaseGraph() + magmaConfig.getStructuresGraph());
 		params.put(STRUCTURE_ID, id);
-		params.put("LG1", config.getLG1());
-		params.put("LG2", config.getLG2());
+		params.put("LG1", magmaConfig.getLG1());
+		params.put("LG2", magmaConfig.getLG2());
 
 		JSONArray structureArray =  repoGestion.getResponseAsArray(buildRequest(Constants.STRUCTURES_QUERIES_PATH,"getStructure.ftlh", params));
 		JSONObject structure = (JSONObject) structureArray.get(0);
@@ -135,7 +133,7 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 	@Override
 	public String getStructureDateMAJ(String id) throws RmesException, JsonProcessingException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_GRAPH, config.getBaseGraph() + config.getStructuresGraph());
+		params.put(STRUCTURES_GRAPH, magmaConfig.getBaseGraph() + magmaConfig.getStructuresGraph());
 		params.put(STRUCTURE_ID, id);
 
 		JSONArray structureArray =  repoGestion.getResponseAsArray(buildRequest(Constants.STRUCTURES_QUERIES_PATH,"getStructureDateMAJ.ftlh", params));
@@ -158,8 +156,8 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 
 	private void getStructureComponents(String id, JSONObject structure) throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_GRAPH, config.getBaseGraph() + config.getStructuresGraph());
-		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, config.getBaseGraph() + Config.STRUCTURES_COMPONENTS_GRAPH);
+		params.put(STRUCTURES_GRAPH, magmaConfig.getBaseGraph() + magmaConfig.getStructuresGraph());
+		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, magmaConfig.getBaseGraph() + MagmaConfig.getStructuresComponentsGraph());
 		params.put(STRUCTURE_ID, id);
 
 		JSONArray components = repoGestion.getResponseAsArray(buildRequest(Constants.STRUCTURES_QUERIES_PATH,"getStructureComponents.ftlh", params));
@@ -227,11 +225,11 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 	@Override
 	public JSONObject getComponent(String id) throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, config.getBaseGraph() + Config.STRUCTURES_COMPONENTS_GRAPH);
-		params.put(CODELIST_GRAPH_KEY, config.getBaseGraph() +config.getCodelistGraph());
+		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, magmaConfig.getBaseGraph() + MagmaConfig.getStructuresComponentsGraph());
+		params.put(CODELIST_GRAPH_KEY, magmaConfig.getBaseGraph() + magmaConfig.getCodelistGraph());
 		params.put("ID", id);
-		params.put("LG1", config.getLG1());
-		params.put("LG2", config.getLG2());
+		params.put("LG1", magmaConfig.getLG1());
+		params.put("LG2", magmaConfig.getLG2());
 
 		JSONObject component =  repoGestion.getResponseAsObject(buildRequest("getComponent.ftlh", params));
 
@@ -273,10 +271,10 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 			JSONObject concept = new JSONObject();
 			concept.put("id", component.getString("idConcept"));
 			HashMap<String, Object> paramsSDMX = new HashMap<>();
-			paramsSDMX.put("LG1", Config.LG1);
-			paramsSDMX.put("LG2", Config.LG2);
+			paramsSDMX.put("LG1", MagmaConfig.getLG1());
+			paramsSDMX.put("LG2", MagmaConfig.getLG2());
 			paramsSDMX.put("ID", component.getString("idConcept"));
-			paramsSDMX.put("CONCEPTS_GRAPH", Config.BASE_GRAPH+ Config.CONCEPTS_GRAPH);
+			paramsSDMX.put("CONCEPTS_GRAPH", MagmaConfig.getBaseGraph() + MagmaConfig.getConceptsGraph());
 			JSONObject conceptsSdmx = repoGestion.getResponseAsObject(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getConceptsSdmx.ftlh", paramsSDMX));;
 			concept.put("conceptsSdmx",conceptsSdmx);
 			this.addCloseMatch(concept);
@@ -341,18 +339,18 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 	@Override
 	public JSONObject getComponentDateMAJ(String id) throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, config.getBaseGraph() + Config.STRUCTURES_COMPONENTS_GRAPH);
-		params.put(CODELIST_GRAPH_KEY, config.getBaseGraph() +config.getCodelistGraph());
+		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, magmaConfig.getBaseGraph() + MagmaConfig.getStructuresComponentsGraph());
+		params.put(CODELIST_GRAPH_KEY, magmaConfig.getBaseGraph() + magmaConfig.getCodelistGraph());
 		params.put("ID", id);
 		return repoGestion.getResponseAsObject(buildRequest("getComponentDateMAJ.ftlh", params));
 	}
 
 	private JSONArray getCodes(String notation) throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put(CODELIST_GRAPH_KEY,config.getBaseGraph() + config.getCodelistGraph());
+		params.put(CODELIST_GRAPH_KEY, magmaConfig.getBaseGraph() + magmaConfig.getCodelistGraph());
 		params.put("NOTATION", notation);
-		params.put("LG1", config.getLG1());
-		params.put("LG2", config.getLG2());
+		params.put("LG1", magmaConfig.getLG1());
+		params.put("LG2", magmaConfig.getLG2());
 
 		JSONArray codes =  repoGestion.getResponseAsArray(buildRequest(Constants.CODELISTS_QUERIES_PATH,"getCodes.ftlh", params));
 		JSONArray levels =  repoGestion.getResponseAsArray(buildRequest(Constants.CODELISTS_QUERIES_PATH,"getCodeLevel.ftlh", params));
@@ -364,7 +362,7 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 			JSONObject code = codes.getJSONObject(i);
 
 			HashMap<String, Object> closeMatchParams = new HashMap<>();
-			closeMatchParams.put("CONCEPTS_GRAPH", config.getBaseGraph() +config.getCodelistGraph());
+			closeMatchParams.put("CONCEPTS_GRAPH", magmaConfig.getBaseGraph() + magmaConfig.getCodelistGraph());
 			closeMatchParams.put("CONCEPT_ID", code.getString("code"));
 			JSONArray closeMatch = repoGestion.getResponseAsArray(buildRequest(Constants.CODELISTS_QUERIES_PATH,"getCloseMatch.ftlh", closeMatchParams));
 
@@ -441,7 +439,7 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 
 	private void addCloseMatch(JSONObject concept) throws RmesException {
 		HashMap<String, Object> params = new HashMap<>();
-		params.put("CONCEPTS_GRAPH", config.getBaseGraph() +config.getConceptsGraph());
+		params.put("CONCEPTS_GRAPH", magmaConfig.getBaseGraph() + magmaConfig.getConceptsGraph());
 		params.put("CONCEPT_ID", concept.getString("id"));
 		JSONArray closeMatch = repoGestion.getResponseAsArray(buildRequest("getCloseMatch.ftlh", params));
 		if(closeMatch.length() > 0){
@@ -460,7 +458,7 @@ public class StructuresImpl extends RdfService implements StructuresServices {
 
 	public Map<String, Object> initParams() {
 		Map<String, Object> params = new HashMap<>();
-		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, Config.BASE_GRAPH + Config.STRUCTURES_COMPONENTS_GRAPH);
+		params.put(STRUCTURES_COMPONENTS_GRAPH_KEY, MagmaConfig.getBaseGraph() + MagmaConfig.getStructuresComponentsGraph());
 		return params;
 	}
 

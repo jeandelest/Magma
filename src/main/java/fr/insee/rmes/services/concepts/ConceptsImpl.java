@@ -11,13 +11,13 @@ import fr.insee.rmes.modelSwagger.concept.ConceptByIdModelSwagger;
 import fr.insee.rmes.modelSwagger.concept.LabelConcept;
 import fr.insee.rmes.model.concept.ConceptById;
 import fr.insee.rmes.model.concept.ConceptSDMX;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import fr.insee.rmes.persistence.RdfService;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
 import fr.insee.rmes.utils.exceptions.RmesException;
 
 @Service
@@ -31,17 +31,17 @@ public class ConceptsImpl extends RdfService implements ConceptsServices {
     @Override
     public String getDetailedConcept(String id) throws RmesException, JsonProcessingException {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
         params.put("ID", id);
-        params.put(CONCEPTS_GRAPH, Config.BASE_GRAPH+Config.CONCEPTS_GRAPH);
+        params.put(CONCEPTS_GRAPH, MagmaConfig.getBaseGraph() + MagmaConfig.getConceptsGraph());
 
         JSONObject concept = repoGestion.getResponseAsObject(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getDetailedConcept.ftlh", params));
         JSONObject defcourtefr = repoGestion.getResponseAsObject(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getConceptDefCourteFR.ftlh", params));
         JSONObject defcourteen = repoGestion.getResponseAsObject(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getConceptDefCourteEN.ftlh", params));
 
-        ConceptDefCourte defCourtesFR = new ConceptDefCourte((String) defcourtefr.get("contenu"),Config.LG1);
-        ConceptDefCourte defCourteEN = new ConceptDefCourte((String) defcourteen.get("contenu"),Config.LG2);
+        ConceptDefCourte defCourtesFR = new ConceptDefCourte((String) defcourtefr.get("contenu"), MagmaConfig.getLG1());
+        ConceptDefCourte defCourteEN = new ConceptDefCourte((String) defcourteen.get("contenu"), MagmaConfig.getLG2());
         List <ConceptDefCourte> defCourtes = new ArrayList<>();
         defCourtes.add(defCourtesFR);
         defCourtes.add(defCourteEN);
@@ -52,8 +52,8 @@ public class ConceptsImpl extends RdfService implements ConceptsServices {
         ObjectMapper jsonResponse = new ObjectMapper();
         ConceptById conceptById = jsonResponse.readValue(concept.toString(), ConceptById.class);
 
-        LabelConcept labelConcept1 = new LabelConcept(Config.LG1, conceptById.getPrefLabelLg1());
-        LabelConcept labelConcept2 = new LabelConcept(Config.LG2, conceptById.getPrefLabelLg2());
+        LabelConcept labelConcept1 = new LabelConcept(MagmaConfig.getLG1(), conceptById.getPrefLabelLg1());
+        LabelConcept labelConcept2 = new LabelConcept(MagmaConfig.getLG2(), conceptById.getPrefLabelLg2());
         List<LabelConcept> labelConcepts = new ArrayList<>();
         if (labelConcept1.getLangue() !=null) {
             labelConcepts.add(labelConcept1);
@@ -78,10 +78,10 @@ public class ConceptsImpl extends RdfService implements ConceptsServices {
     @Override
     public String getDetailedConceptDateMAJ(String id) throws RmesException, JsonProcessingException {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
         params.put("ID", id);
-        params.put(CONCEPTS_GRAPH, Config.BASE_GRAPH+Config.CONCEPTS_GRAPH);
+        params.put(CONCEPTS_GRAPH, MagmaConfig.getBaseGraph() + MagmaConfig.getConceptsGraph());
 
         JSONObject concept = repoGestion.getResponseAsObject(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getDetailedConceptDateMAJ.ftlh", params));
         ObjectMapper jsonResponse = new ObjectMapper();
@@ -97,9 +97,9 @@ public class ConceptsImpl extends RdfService implements ConceptsServices {
     @Override
     public String getAllConcepts() throws RmesException {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
-        params.put(CONCEPTS_GRAPH, Config.BASE_GRAPH+Config.CONCEPTS_GRAPH);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
+        params.put(CONCEPTS_GRAPH, MagmaConfig.getBaseGraph() + MagmaConfig.getConceptsGraph());
         JSONArray conceptLists= repoGestion.getResponseAsArray(buildRequest(Constants.CONCEPTS_QUERIES_PATH,"getAllConcepts.ftlh", params));
         return conceptLists.toString();
     }

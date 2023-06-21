@@ -1,14 +1,12 @@
 package fr.insee.rmes.services.organisations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.insee.rmes.model.operation.SerieById;
 import fr.insee.rmes.model.organisation.OrganisationModel;
-import fr.insee.rmes.modelSwagger.operation.*;
 import fr.insee.rmes.modelSwagger.organisations.Label;
 import fr.insee.rmes.modelSwagger.organisations.OrganisationsModelSwagger;
 import fr.insee.rmes.persistence.RdfService;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,8 +23,8 @@ public class OrganisationsImpl extends RdfService implements OrganisationsServic
 
     public Map<String, Object> initParams() {
         Map<String, Object> params = new HashMap<>();
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
         return params;
     }
 
@@ -45,8 +43,8 @@ public class OrganisationsImpl extends RdfService implements OrganisationsServic
 
         for (OrganisationModel byOrganisations : listOperations) {
             if (byOrganisations.getId() != null) {
-                Label prefLabel1 = new Label(Config.LG1, byOrganisations.getPrefLabelLg1());
-                Label prefLabel2 = new Label(Config.LG2, byOrganisations.getPrefLabelLg2());
+                Label prefLabel1 = new Label(MagmaConfig.getLG1(), byOrganisations.getPrefLabelLg1());
+                Label prefLabel2 = new Label(MagmaConfig.getLG2(), byOrganisations.getPrefLabelLg2());
                 List<Label> label = new ArrayList<>();
                 if (byOrganisations.getPrefLabelLg1() != null) {
                     label.add(prefLabel1);}
@@ -71,10 +69,10 @@ public class OrganisationsImpl extends RdfService implements OrganisationsServic
         OrganisationModel operationById = jsonResponse.readValue(operationId.toString(),OrganisationModel.class);
 
         ObjectMapper mapper = new ObjectMapper();
-        Label preflabel1 = new Label(Config.LG1,operationById.getPrefLabelLg1());
-        Label preflabel2 = new Label(Config.LG2, operationById.getPrefLabelLg2());
-        Label altlabel1 = new Label(Config.LG1,operationById.getAltLabelLg1());
-        Label altlabel2 = new Label(Config.LG2, operationById.getAltLabelLg2());
+        Label preflabel1 = new Label(MagmaConfig.getLG1(),operationById.getPrefLabelLg1());
+        Label preflabel2 = new Label(MagmaConfig.getLG2(), operationById.getPrefLabelLg2());
+        Label altlabel1 = new Label(MagmaConfig.getLG1(),operationById.getAltLabelLg1());
+        Label altlabel2 = new Label(MagmaConfig.getLG2(), operationById.getAltLabelLg2());
         List<Label> label = new ArrayList<>();
         List<Label> altlabel = new ArrayList<>();
         if (operationById.getPrefLabelLg1() != null) {

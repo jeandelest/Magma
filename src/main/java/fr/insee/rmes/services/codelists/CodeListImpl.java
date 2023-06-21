@@ -2,7 +2,7 @@ package fr.insee.rmes.services.codelists;
 
 import fr.insee.rmes.persistence.RdfService;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class CodeListImpl extends RdfService implements CodeListsServices {
 
     public Map<String, Object> initParams() {
         Map<String, Object> params = new HashMap<>();
-        params.put("CODELIST_GRAPH", Config.BASE_GRAPH+Config.CODELIST_GRAPH);
+        params.put("CODELIST_GRAPH", MagmaConfig.getBaseGraph() + MagmaConfig.getCodelistGraph());
         return params;
     }
 
@@ -70,10 +70,10 @@ public class CodeListImpl extends RdfService implements CodeListsServices {
 
     public Map<String, Object> initParamsNotation(String notation) {
         Map<String, Object> params = new HashMap<>();
-        params.put("CODELIST_GRAPH", Config.BASE_GRAPH+Config.CODELIST_GRAPH);
+        params.put("CODELIST_GRAPH", MagmaConfig.getBaseGraph() + MagmaConfig.getCodelistGraph());
         params.put(NOTATION, notation);
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
         return params;
     }
 
@@ -105,7 +105,7 @@ public class CodeListImpl extends RdfService implements CodeListsServices {
             JSONObject code = codes.getJSONObject(i);
 
             HashMap<String, Object> closeMatchParams = new HashMap<>();
-            closeMatchParams.put("CONCEPTS_GRAPH", Config.BASE_GRAPH + config.getCodelistGraph());
+            closeMatchParams.put("CONCEPTS_GRAPH", MagmaConfig.getBaseGraph() + magmaConfig.getCodelistGraph());
             closeMatchParams.put("CONCEPT_ID", code.getString("code"));
             JSONArray closeMatch = repoGestion.getResponseAsArray(buildRequest(Constants.CODELISTS_QUERIES_PATH,"getCloseMatch.ftlh", closeMatchParams));
 
@@ -199,8 +199,8 @@ public class CodeListImpl extends RdfService implements CodeListsServices {
     public String getCodesListDateMiseAJour(String notation) throws RmesException{
         Map<String, Object> params = initParams();
         params.put(NOTATION, notation);
-        params.put("LG1", Config.LG1);
-        params.put("LG2", Config.LG2);
+        params.put("LG1", MagmaConfig.getLG1());
+        params.put("LG2", MagmaConfig.getLG2());
 
         JSONObject codesList =  repoGestion.getResponseAsObject(buildRequest(Constants.CODELISTS_QUERIES_PATH,"getCodesListDateMAJ.ftlh", params));
 

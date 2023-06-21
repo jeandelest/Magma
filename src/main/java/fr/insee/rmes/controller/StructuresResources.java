@@ -39,7 +39,6 @@ public class StructuresResources {
 	@Autowired
 	StructuresServices structuresServices;
 
-	@GET
 	@GetMapping("/structures")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Operation(operationId = "getAllStructures", summary = "Get all structures",security = @SecurityRequirement(name = "bearerScheme"), responses = { @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = AllStructureModelSwagger.class)))})
@@ -52,7 +51,6 @@ public class StructuresResources {
 		}
 	}
 
-	@GET
 	@GetMapping("/structure/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Operation(operationId = "getStructure", summary = "Get a structure",security = @SecurityRequirement(name = "bearerScheme"), responses = { @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = StructureByIdModelSwagger.class)))})

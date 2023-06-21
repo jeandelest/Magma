@@ -8,10 +8,10 @@ import org.eclipse.rdf4j.model.vocabulary.SKOS;
 
 import fr.insee.rmes.persistence.ontologies.ORG;
 import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.config.Config;
+import fr.insee.rmes.utils.config.MagmaConfig;
 
 public enum ObjectType {
-	CONCEPT("concept", SKOS.CONCEPT,  Config.CONCEPTS_BASE_URI),
+	CONCEPT("concept", SKOS.CONCEPT, MagmaConfig.getConceptsBaseUri()),
 	ORGANIZATION("organization",ORG.ORGANIZATION, ""),
 	UNDEFINED(Constants.UNDEFINED,null, "");
 	
@@ -34,7 +34,7 @@ public enum ObjectType {
 	}
 	
 	public String getBaseUri() {
-		return Config.BASE_URI_GESTION + this.baseUri;
+		return MagmaConfig.getBaseUriGestion() + this.baseUri;
 	}
 	
 	private static Map<String, ObjectType> lookupLabel = new HashMap<>();
@@ -101,6 +101,6 @@ public enum ObjectType {
 	 */
 	public static String getCompleteUriGestion(String labelType, String id) {
 		String baseUri = getBaseUri(labelType);
-		return Config.BASE_URI_GESTION + baseUri + "/" + id;
+		return MagmaConfig.getBaseUriGestion() + baseUri + "/" + id;
 	}
 }
