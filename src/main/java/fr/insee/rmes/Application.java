@@ -1,12 +1,6 @@
 package fr.insee.rmes;
 
 
-import java.security.Principal;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-
-
 import fr.insee.rmes.configuration.PropertiesLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +10,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 
 @SpringBootApplication
