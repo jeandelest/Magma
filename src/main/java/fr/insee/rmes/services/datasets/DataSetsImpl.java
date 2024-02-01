@@ -14,6 +14,13 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 
 @Service
@@ -350,6 +357,17 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
         return distributionReponse;
     }
 
+    @Override
+    public void patchDataset(String datasetId, String observationNumber) throws RmesException, IOException, InterruptedException {
+       String url = Config.BAUHAUS_URL + Config.DATASETS_BASE_URI + "/"+ datasetId +"/observationNumber";
+       String requestBody = observationNumber;
+       HttpRequest request = HttpRequest.newBuilder()
+               .uri(URI.create(url))
+               .header("Content-Type","application/json")
+               .method("PATCH",HttpRequest.BodyPublishers.ofString(requestBody))
+               .build();
+       HttpClient.newHttpClient().send(request,HttpResponse.BodyHandlers.ofString());
+    }
 
     private List<IdLabel> getWasGeneratedBy(List<String> operationStat) throws RmesException {
         List<IdLabel> wasGeneratedBy = new ArrayList<>();

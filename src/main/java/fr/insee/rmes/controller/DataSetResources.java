@@ -6,6 +6,7 @@ import fr.insee.rmes.modelSwagger.dataset.DataSetModelSwagger;
 import fr.insee.rmes.services.datasets.DataSetsServices;
 import fr.insee.rmes.utils.exceptions.RmesException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,11 +15,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.ConditionalOnGraphQlSchema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/", produces = {"application/json"})
@@ -82,6 +85,20 @@ public class DataSetResources {
     public ResponseEntity<Distributions[]>  getDataSetDistributionsById(@PathVariable String id) throws RmesException, JsonProcessingException {
 
         return ResponseEntity.ok(dataSetsServices.getDataSetDistributionsById(id));
+    }
+
+
+
+    @PatchMapping(value = "/{id}/observationNumber")
+    @Operation(operationId = "updateObservationNumber", summary = "Update ObsevationNumber of a dataset")
+    public void patchDataset(
+            @PathVariable("id") String datasetId,
+            @Schema(name ="observationNumber",example ="{\n" +
+                    "   \"observationNumber\": 1\n" +
+                    "}" )
+            @Parameter(description = "Dataset", required = true) @RequestBody String observationNumber
+    ) throws RmesException, IOException, InterruptedException {
+        this.dataSetsServices.patchDataset(datasetId,observationNumber);
     }
 
 }
