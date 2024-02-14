@@ -48,6 +48,6 @@ jobs:
         with:
           push: true
           context: .
-          file: ./dockerfile
+          file: Dockerfile
           tags: inseefr/magma-back-office:latest
 
