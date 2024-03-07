@@ -184,6 +184,7 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
             landingPage.add(landingPage2);
             reponse.setLandingPage(landingPage);
         }
+
         //récupération du processStep
         if (codes_result.has("codeProcessStep")) {
             JSONObject processStepResult = repoGestion.getResponseAsObject(buildRequest(Constants.DATASETS_QUERIES_PATH, "getProcessStep.ftlh", params));

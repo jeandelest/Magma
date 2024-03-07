@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fr.insee.rmes.modelSwagger.dataset.Label;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.annotation.Generated;
-import java.util.List;
+import jakarta.annotation.Generated;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({

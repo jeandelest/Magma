@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import fr.insee.rmes.model.CodeList.CodeList;
 import fr.insee.rmes.model.datasets.*;
-import fr.insee.rmes.modelSwagger.codeList.Code;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONObject;
 
-import javax.annotation.Generated;
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;

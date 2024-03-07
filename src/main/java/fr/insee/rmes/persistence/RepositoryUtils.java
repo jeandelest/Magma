@@ -1,11 +1,9 @@
 package fr.insee.rmes.persistence;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.Set;
-
-import javax.ws.rs.core.Response;
-
+import fr.insee.rmes.persistence.rdfQueries.QueryUtils;
+import fr.insee.rmes.utils.Constants;
+import fr.insee.rmes.utils.exceptions.RmesException;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,10 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import fr.insee.rmes.persistence.RepositoryUtils;
-import fr.insee.rmes.persistence.rdfQueries.QueryUtils;
-import fr.insee.rmes.utils.Constants;
-import fr.insee.rmes.utils.exceptions.RmesException;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.Set;
 
 @Service
 public abstract class RepositoryUtils {

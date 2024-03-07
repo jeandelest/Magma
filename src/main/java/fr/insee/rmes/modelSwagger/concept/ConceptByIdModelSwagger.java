@@ -1,21 +1,17 @@
 
 package fr.insee.rmes.modelSwagger.concept;
 
+import com.fasterxml.jackson.annotation.*;
+import fr.insee.rmes.model.concept.ConceptDefCourte;
+import fr.insee.rmes.model.concept.ConceptSDMX;
+import jakarta.annotation.Generated;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Generated;
-import javax.validation.Valid;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import fr.insee.rmes.model.concept.ConceptDefCourte;
-import fr.insee.rmes.model.concept.ConceptSDMX;
-import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

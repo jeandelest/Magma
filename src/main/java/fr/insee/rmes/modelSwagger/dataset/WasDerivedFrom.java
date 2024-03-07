@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.annotation.Generated;
 import java.util.List;
 
 @JsonPropertyOrder({

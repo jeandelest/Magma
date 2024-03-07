@@ -14,9 +14,7 @@ import fr.insee.rmes.utils.exceptions.RmesException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
 
-import javax.xml.soap.SAAJResult;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
