@@ -1,18 +1,16 @@
 package fr.insee.rmes.configuration;
 
-import fr.insee.rmes.utils.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,28 +22,28 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled=false, prePostEnabled = true)
+@EnableMethodSecurity(securedEnabled = false)
 @ConditionalOnExpression("!'PROD'.equals('${fr.insee.rmes.magma.envir}')")
-public class DefaultSecurityContext extends WebSecurityConfigurerAdapter {
-
+public class DefaultSecurityContext {
     private static final Logger logger = LoggerFactory.getLogger(DefaultSecurityContext.class);
-
-    @Autowired
-    Config config;
-
     @Value("${fr.insee.rmes.magma.cors.allowedOrigin}")
     private Optional<String> allowedOrigin;
+    private final boolean requiresSsl;
+    public DefaultSecurityContext(@Value("${fr.insee.rmes.magma.force.ssl}") boolean requiresSsl) {
+        this.requiresSsl = requiresSsl;
+    }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.cors(withDefaults())
-                .authorizeRequests().anyRequest().permitAll();
-        if (config.isRequiresSsl()) {
-            http.antMatcher("/**").requiresChannel().anyRequest().requiresSecure();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
+                .authorizeHttpRequests(
+                        authorizeHttpRequest -> authorizeHttpRequest.anyRequest().permitAll());
+        if (requiresSsl) {
+            http.requiresChannel(channel -> channel.requestMatchers("/**").requiresSecure());
         }
-
         logger.info("Default authentication activated - no auth ");
+        return http.build();
     }
 
     @Bean
@@ -60,6 +58,4 @@ public class DefaultSecurityContext extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
