@@ -21,12 +21,13 @@
 	</organization>
 
 	<properties>
-		<packaging.mode>war</packaging.mode>
-		<java.version>17</java.version>
+		<packaging.mode>jar</packaging.mode>
+		<java.version>21</java.version>
 		<keycloak.version>21.0.1</keycloak.version>
 		<json.version>20230227</json.version>
-		<rdf4j.version>4.2.3</rdf4j.version>
-		<springdoc.version>1.6.15</springdoc.version>
+		<rdf4j.version>4.3.9</rdf4j.version>
+		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+		<junit.version>5.8.2</junit.version>
 		<jacoco.version>0.8.8</jacoco.version>
 	</properties>
 	<dependencyManagement>
@@ -122,7 +123,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>${springdoc.version}</version>
+			<version>${springdoc-openapi-ui.version}</version>
 		</dependency>
 
 		<dependency>
@@ -138,7 +139,14 @@
 			<artifactId>jakarta.persistence-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
 
 	</dependencies>
 
