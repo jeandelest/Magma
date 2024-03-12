@@ -93,14 +93,15 @@ public class DataSetResources {
 
     @PatchMapping(value = "/dataset/{id}/observationNumber")
 
-    @Operation(operationId = "updateObservationNumber", summary = "Update ObsevationNumber of a dataset")
+    @Operation(operationId = "updateObservationNumber", summary = "Update ObservationNumber of a dataset")
     public String patchDataSetDistributionsByIdNombreObservations(
             @PathVariable("id") String datasetId,
+            @RequestParam(name = "observationNumber") String observationNum,
             @Schema(name ="observationNumber" )
             @Parameter(description = "ObservationNumber of a dataset", required = true) @RequestParam String observationNumber
     ) throws RmesException, MalformedURLException {
         String token = request.getHeader("Authorization");
-        return this.dataSetsServices.patchDataset(datasetId,observationNumber,token);
+        return this.dataSetsServices.patchDataset(datasetId,observationNum,token);
 
     }
 

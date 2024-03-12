@@ -84,7 +84,7 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
     public String patchDataset(String datasetId, String observationNumber,String token) throws RmesException, MalformedURLException {
         try {
             String query = String.format("observationNumber=%s", URLEncoder.encode(observationNumber, "UTF-8"));
-            String urlString = Config.DATASETS_URL + "/datasets/" + datasetId + "/observationNumber" +"?"+query;
+            String urlString = Config.DATASETS_URL + "/dataset/" + datasetId + "/observationNumber" +"?"+query;
             String id = getIdFromJWT(token);
             String email = getEmailFromJWT(token);
             logger.trace("l'id "+id + " ("+ email + ") a patché le dataset :" + datasetId);
@@ -93,7 +93,8 @@ public class DataSetsImpl extends RdfService implements DataSetsServices {
             con.setRequestProperty("Authorization",token);
             con.setRequestMethod("POST");
             con.setRequestProperty("X-HTTP-Method-Override","PATCH");
-//            int responseCode = con.getResponseCode();
+            int responseCode = con.getResponseCode();
+            String responseMessage = con.getResponseMessage();
             return con.getResponseMessage();
         } catch (IOException e) {
             throw new RuntimeException(e);
